@@ -1,6 +1,6 @@
 const allowedCors = [
-  'https://movies-explorer.loner.nomoredomains.icu',
-  'http://movies-explorer.nomoredomains.icu',
+  'https://movies-explorer.loner.nomoredomains.club',
+  'http://movies-explorer.loner.nomoredomains.club',
   'http://localhost:3000/',
 ];
 
