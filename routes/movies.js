@@ -8,6 +8,6 @@ const {
 
 router.get('/movies', getMovies);
 router.post('/movies', movieValidation, createMovie);
-router.delete('/movies/:movieId', idValidation, deleteMovie);
+router.delete('/movies/:_id', idValidation, deleteMovie);
 
 module.exports = router;

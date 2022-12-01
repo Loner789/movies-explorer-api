@@ -7,7 +7,6 @@ const ForbiddenError = require('../errors/ForbiddenError');
 const getMovies = (req, res, next) => {
   const owner = req.user._id;
   Movie.find({ owner })
-    .populate('user')
     .then((movies) => res.send(movies))
     .catch(next);
 };
@@ -50,15 +49,13 @@ const createMovie = (req, res, next) => {
 };
 
 const deleteMovie = (req, res, next) => {
-  const { movieId } = req.params;
-
-  Movie.findById(movieId)
+  Movie.findById(req.params._id)
     .orFail(() => {
       throw new NotFoundError('Фильм с указанным _id не найден.');
     })
     .then((movie) => {
       if (movie.owner.toString() === req.user._id) {
-        Movie.findByIdAndRemove(movieId).then((element) => res.send(element));
+        Movie.findByIdAndRemove(movie._id).then((element) => res.send(element));
       } else {
         throw new ForbiddenError('Недостаточно прав для удаления фильма.');
       }

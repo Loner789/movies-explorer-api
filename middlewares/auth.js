@@ -2,10 +2,15 @@ const jwt = require('jsonwebtoken');
 const AuthError = require('../errors/AuthError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
-
-// eslint-disable-next-line consistent-return
 const auth = (req, res, next) => {
-  const token = req.cookies.jwt;
+  const { authorization } = req.headers;
+
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    throw new AuthError('Необходима авторизация');
+  }
+
+  const token = authorization.replace('Bearer ', '');
+
   let payload;
 
   try {

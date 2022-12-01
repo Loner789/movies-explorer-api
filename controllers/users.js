@@ -67,7 +67,7 @@ const login = (req, res, next) => {
         secure: 'true',
         sameSite: 'none',
       })
-        .send({ message: 'Авторизация прошла успешно!', jwt: token });
+        .send({ token });
     })
     .catch(next);
 };
