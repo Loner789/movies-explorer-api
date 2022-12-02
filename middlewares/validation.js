@@ -1,7 +1,10 @@
 const { celebrate, Joi } = require('celebrate');
+const validator = require('validator');
+const { BAD_REQUEST_MESSAGE } = require('../utils/constants');
 
-// eslint-disable-next-line no-useless-escape
-const urlRegExp = /^(https?:\/{2})(w{3})?([\w\-]+)(\.[\w\-]+)(\/[\w\-\.\~\:\/\?\#\[\]\@\!\$\&\'\(\)\*\+\,\;\=]+)?/;
+const checkUrl = (value, helpers) => (validator.isURL(value)
+  ? value
+  : helpers.message(BAD_REQUEST_MESSAGE));
 
 const loginValidation = celebrate({
   body: Joi.object().keys({
@@ -38,11 +41,10 @@ const movieValidation = celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required().pattern(urlRegExp),
-    trailerLink: Joi.string().required().pattern(urlRegExp),
-    thumbnail: Joi.string().required().pattern(urlRegExp),
-    owner: Joi.string().alphanum().length(24).hex(),
-    movieId: Joi.string().alphanum().length(24).hex(),
+    image: Joi.string().required().custom(checkUrl),
+    trailerLink: Joi.string().required().custom(checkUrl),
+    thumbnail: Joi.string().required().custom(checkUrl),
+    movieId: Joi.number().required().integer().positive(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
   }),

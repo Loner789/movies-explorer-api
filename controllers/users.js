@@ -5,13 +5,15 @@ const User = require('../models/user');
 const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
+const { DEV_SECRET } = require('../utils/config');
+const { BAD_REQUEST_MESSAGE, NOT_FOUND_MESSAGE, CONFLICT_MESSAGE } = require('../utils/constants');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(() => {
-      throw new NotFoundError('Пользователь с указанным _id не найден.');
+      throw new NotFoundError(NOT_FOUND_MESSAGE);
     })
     .then((user) => res.send(user))
     .catch(next);
@@ -29,9 +31,10 @@ const createUser = (req, res, next) => {
       email: user.email,
     }))
     .catch((err) => {
-      if (err.code === 11000) next(new ConflictError('Пользователь с таким email уже существует.'));
-      else if (err instanceof mongoose.Error.ValidationError) next(new BadRequestError('Ошибка валидации.'));
-      else next(err);
+      if (err.code === 11000) next(new ConflictError(CONFLICT_MESSAGE));
+      else if (err instanceof mongoose.Error.ValidationError) {
+        next(new BadRequestError(BAD_REQUEST_MESSAGE));
+      } else next(err);
     });
 };
 
@@ -40,12 +43,13 @@ const updateUserProfile = (req, res, next) => {
 
   User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
     .orFail(() => {
-      throw new NotFoundError('Пользователь с указанным _id не найден.');
+      throw new NotFoundError(NOT_FOUND_MESSAGE);
     })
     .then((newProfile) => res.send(newProfile))
     .catch((err) => {
-      if (err instanceof mongoose.Error.ValidationError) next(new BadRequestError('Ошибка валидации.'));
-      else if (err instanceof mongoose.Error.CastError) next(new BadRequestError('Некорректный _id пользователя.'));
+      if (err instanceof mongoose.Error.ValidationError
+        || err instanceof mongoose.Error.CastError) next(new BadRequestError(BAD_REQUEST_MESSAGE));
+      else if (err.code === 11000) next(new ConflictError(CONFLICT_MESSAGE));
       else next(err);
     });
 };
@@ -57,7 +61,7 @@ const login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        NODE_ENV === 'production' ? JWT_SECRET : DEV_SECRET,
         { expiresIn: '7d' },
       );
 
