@@ -3,7 +3,12 @@ const Movie = require('../models/movie');
 const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
-const { BAD_REQUEST_MESSAGE, FORBIDDEN_MESSAGE, NOT_FOUND_MESSAGE } = require('../utils/constants');
+const {
+  BAD_REQUEST_MESSAGE,
+  FORBIDDEN_MESSAGE,
+  NOT_FOUND_MESSAGE,
+  MOVIE_DELETION_MESSAGE,
+} = require('../utils/constants');
 
 const getMovies = (req, res, next) => {
   const owner = req.user._id;
@@ -60,10 +65,8 @@ const deleteMovie = (req, res, next) => {
         throw new ForbiddenError(FORBIDDEN_MESSAGE);
       }
 
-      return movie;
+      return movie.remove().then(() => res.send({ message: MOVIE_DELETION_MESSAGE }));
     })
-    .then((movie) => Movie.findByIdAndRemove(movie._id.toString()))
-    .then((element) => res.send(element))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) next(new BadRequestError(BAD_REQUEST_MESSAGE));
       else next(err);

@@ -9,6 +9,7 @@ const WRONG_PATH_MESSAGE = 'Запрашиваемый ресурс не най�
 const WRONG_EMAIL_MESSAGE = 'Некорректный email';
 const WRONG_URL_MESSAGE = 'Некорректный url-адрес';
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
+const MOVIE_DELETION_MESSAGE = 'Фильм успешно удалён';
 
 module.exports = {
   BAD_REQUEST_MESSAGE,
@@ -22,4 +23,5 @@ module.exports = {
   WRONG_EMAIL_MESSAGE,
   WRONG_URL_MESSAGE,
   DEFAULT_ALLOWED_METHODS,
+  MOVIE_DELETION_MESSAGE,
 };
