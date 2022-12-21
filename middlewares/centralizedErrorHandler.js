@@ -5,7 +5,7 @@ const centralizedErrorHandler = (err, req, res, next) => {
 
   res.status(statusCode).send({
     message: statusCode === 500 ? INTERNAL_ERROR_MESSAGE : message,
-  }, err);
+  });
 
   next();
 };
