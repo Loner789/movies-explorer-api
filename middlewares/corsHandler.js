@@ -3,7 +3,8 @@ const { DEFAULT_ALLOWED_METHODS } = require('../utils/constants');
 const allowedCors = [
   'https://movies-explorer.loner.nomoredomains.club',
   'http://movies-explorer.loner.nomoredomains.club',
-  'http://localhost:3000/',
+  'https://localhost:3000',
+  'http://localhost:3000',
 ];
 
 const corsHandler = (req, res, next) => {

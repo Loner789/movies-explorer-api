@@ -65,7 +65,7 @@ const deleteMovie = (req, res, next) => {
         throw new ForbiddenError(FORBIDDEN_MESSAGE);
       }
 
-      return movie.remove().then(() => res.send({ message: MOVIE_DELETION_MESSAGE }));
+      return movie.remove().then((data) => res.send({ data, message: MOVIE_DELETION_MESSAGE }));
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) next(new BadRequestError(BAD_REQUEST_MESSAGE));
