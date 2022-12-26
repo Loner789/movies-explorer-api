@@ -3,7 +3,7 @@ const { DEFAULT_ALLOWED_METHODS } = require('../utils/constants');
 const allowedCors = [
   'https://movies-explorer.loner.nomoredomains.club',
   'http://movies-explorer.loner.nomoredomains.club',
-  'https://loner789.github.io/movies-explorer-frontend/#',
+  'https://loner789.github.io/movies-explorer-frontend',
   'https://localhost:3000',
   'http://localhost:3000',
 ];
